@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>flērcafē - Drinks Menu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@200;300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --gold: #c5a059; 
+            --dark-bg: #000000;
+            --card-bg: rgba(0, 0, 0, 0.85);
+            --text-main: #ffffff;
+            --text-dim: #f0f0f0;
+            --border: rgba(197, 160, 89, 0.45);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body { 
+            background-color: var(--dark-bg); 
+            font-family: 'Montserrat', sans-serif; 
+            color: var(--text-main);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .slide {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 40px 8%;
+            position: relative;
+            overflow: hidden;
+            border-bottom: 1px solid #1a1a1a;
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            scroll-snap-align: start;
+        }
+
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.72);
+            z-index: 1;
+        }
+
+        /* --- ASIGNARE IMAGINI FUNDAL --- */
+        .bg-coffee-main { 
+            background-image: url('poza2espressor.jpg') !important; 
+            background-position: center bottom; /* Ajustat pentru a vedea corpul espressorului */
+        }
+        .bg-scissors { 
+            background-image: url('poza3foarfeca.jpg') !important; 
+        }
+        .bg-museum { 
+            background-image: url('poza3muzeu.jpg') !important; 
+        }
+
+        .slide > * { position: relative; z-index: 2; }
+
+        h1, h2, h3 { font-family: 'Playfair Display', serif; text-transform: uppercase; letter-spacing: 4px; }
+        h1 { font-size: 64px; color: var(--gold); margin-bottom: 5px; text-shadow: 0 4px 15px rgba(0,0,0,1); }
+        h2 { font-size: 30px; color: var(--gold); border-bottom: 2px solid var(--gold); padding-bottom: 10px; margin-bottom: 30px; display: inline-block; }
+        
+        .price { color: var(--gold); font-weight: 700; white-space: nowrap; font-size: 1.15em; text-align: right; }
+        .ml { font-size: 11px; color: var(--gold); text-transform: lowercase; font-weight: 400; margin-left: 6px; }
+        .ingredients { font-size: 12px; color: var(--text-dim); font-style: italic; display: block; margin-top: 4px; font-weight: 400; line-height: 1.4; text-shadow: 1px 1px 3px rgba(0,0,0,1); }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px 80px;
+            align-items: start;
+        }
+
+        table { width: 100%; border-collapse: collapse; }
+        td { padding: 10px 0; border-bottom: 1px solid var(--border); vertical-align: top; }
+        tr:last-child td { border-bottom: none; }
+        
+        .category-label {
+            font-size: 18px;
+            color: var(--gold);
+            margin-bottom: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 5px rgba(0,0,0,1);
+        }
+
+        .logo-wrap {
+            width: 170px; height: 170px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 20px;
+            padding: 5px;
+            box-shadow: 0 0 50px rgba(197, 160, 89, 0.7);
+            border: 3px solid var(--gold);
+        }
+        .logo-img { width: 92%; height: 92%; border-radius: 50%; object-fit: cover; }
+
+        .tagline { font-family: 'Playfair Display', serif; font-style: italic; font-size: 24px; color: #fff; margin-top: 5px; text-shadow: 2px 2px 10px rgba(0,0,0,1); }
+        
+        .highlight-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border: 1px solid var(--gold);
+            position: relative;
+            backdrop-filter: blur(10px);
+        }
+
+        .promo-badge {
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: var(--gold);
+            color: var(--dark-bg);
+            padding: 4px 14px;
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .flex-center { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+
+        @media (max-width: 1024px) {
+            .menu-grid { grid-template-columns: 1fr; gap: 5px; }
+            .slide { height: auto; min-height: 100vh; padding: 40px 5%; }
+            h1 { font-size: 42px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- SLIDE 1: WELCOME (BG: ESPRESSOR TOTAL) -->
+<section class="slide flex-center bg-coffee-main">
+    <div class="logo-wrap">
+        <img src="IMG_0060.JPEG" alt="flērcafē" class="logo-img">
+    </div>
+    <h1>flērcafē</h1>
+    <p class="tagline">Art, Coffee & Spirits</p>
+    <p style="margin-top: 20px; color: var(--gold); font-size: 13px; letter-spacing: 4px; font-weight: 600; text-transform: uppercase;">BUCHAREST • Museum of Recent Art (MARe)</p>
+</section>
+
+<!-- SLIDE 2: THE COFFEE RITUAL (BG: ESPRESSOR) -->
+<section class="slide bg-coffee-main">
+    <h2>The Daily Ritual <span style="font-weight: 300; font-size: 0.6em;">(Coffee)</span></h2>
+    <div class="menu-grid">
+        <div>
+            <div class="category-label">Black Coffee</div>
+            <table>
+                <tr>
+                    <td><strong>Espresso</strong> <span class="ml">20ml</span>
+                        <span class="ingredients">Single shot Ethiopia Single Origin Arabica</span>
+                    </td>
+                    <td class="price">18 RON</td>
+                </tr>
+                <tr>
+                    <td><strong>Espresso Double</strong> <span class="ml">40ml</span>
+                        <span class="ingredients">Double shot Ethiopia - High intensity extraction</span>
+                    </td>
+                    <td class="price">22 RON</td>
+                </tr>
+                <tr>
+                    <td><strong>Filter Coffee (Moccamaster)</strong> <span class="ml">200ml</span>
+                        <span class="ingredients">Brazil Single Origin - Clean & Balanced profile</span>
+                    </td>
+                    <td class="price">26 RON</td>
+                </tr>
+                <tr>
+                    <td><strong>Long Black</strong> <span class="ml">90ml</span>
+                        <span class="ingredients">40ml double shot Ethiopia + 50ml hot water</span>
+                    </td>
+                    <td class="price">22 RON</td>
+                </tr>
+                <tr>
+                    <td><strong>Americano</strong> <span class="ml">90ml</span>
+                        <span class="ingredients">20ml single shot Ethiopia + 70ml hot water</span>
+                    </td>
+                    <td class="price">18 RON</td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <div class="category-label">Milk Beverages (Ethiopia)</div>
+            <table>
+                <tr>
+                    <td><strong>Cortado</strong> <span class="ml">90ml</span>
+                        <span class="ingredients">40ml espresso + 50ml velvety fresh milk</span>
+                    </td>
+                    <td class="price">24 RON</td>
+                </tr>
+                <tr>
+                    <td><strong>Fler Cappuccino</strong> <span class="ml">150ml</span>
+                        <span class="ingredients">20ml espresso + 130ml velvety micro-foam</span>
+                    </td>
+                    <td class="price">28 RON</td>
+                </tr>
+                <tr>
+                    <td><strong>Flat White</strong> <span class="ml">150ml</span>
+                        <span class="ingredients">40ml double shot espresso + 110ml silky steamed milk</span>
+                    </td>
+                    <td class="price">32 RON</td>
+                </tr>
+                <tr>
+                    <td><strong>Latte</strong> <span class="ml">250ml</span>
+                        <span class="ingredients">40ml double shot espresso + 210ml steamed milk</span>
+                    </td>
+                    <td class="price">34 RON</td>
+                </tr>
+                <tr>
+                    <td><strong>Babyccino</strong> <span class="ml">150ml</span>
+                        <span class="ingredients">Delicate frothed milk for the little ones</span>
+                    </td>
+                    <td class="price">20 RON</td>
+                </tr>
+            </table>
+            <p style="margin-top: 10px; font-size: 11px; color: var(--gold); font-weight: 600;">ALternative: Lapte Ovăz / Fără Lactoză (+5 RON)</p>
+        </div>
+    </div>
+</section>
+
+<!-- SLIDE 3: SPECIALTIES & COLD BREW (BG: ESPRESSOR) -->
+<section class="slide bg-coffee-main">
+    <h2>Specialties & Cold Brew</h2>
+    <div class="menu-grid">
+        <div>
+            <div class="category-label">Iced & Hot Concepts</div>
+            <table>
+                <tr>
+                    <td><strong>MARe Hot Chocolate</strong> <span class="ml">250ml</span>
+                        <span class="ingredients">30g melted dark chocolate, fresh milk, pink salt</span>
+                    </td>
+                    <td class="price">32 RON</td>
+                </tr>
+                <tr>
+                    <td><strong>Matcha Latte</strong> <span class="ml">250ml</span>
+                        <span class="ingredients">1.5g Ceremonial Grade Matcha + 220ml milk</span>
+                    </td>
+                    <td class="price">38 RON</td>
+                </tr>
+                <tr>
+                    <td><strong>Iced Matcha</strong> <span class="ml">250ml</span>
+                        <span class="ingredients">Premium Matcha powder + fresh milk, ice</span>
+                    </td>
+                    <td class="price">38 RON</td>
+                </tr>
+                <tr>
+                    <td><strong>Pink Bubbles Matcha</strong> <span class="ml">230ml</span>
+                        <span class="ingredients">1g Premium Matcha + 200ml Pink Tonic Botanical</span>
+                    </td>
+                    <td class="price">42 RON</td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <div class="category-label">Cold Brew Ritual</div>
+            <table>
+                <tr>
+                    <td><strong>Cold Brew</strong> <span class="ml">100ml</span>
+                        <span class="ingredients">Slow-steeped cold extraction (12h)</span>
+                    </td>
+                    <td class="price">24 RON</td>
+                </tr>
+                <tr>
+                    <td><strong>Cold Brew Latte</strong> <span class="ml">250ml</span>
+                        <span class="ingredients">50ml concentrate + 200ml creamy milk</span>
+                    </td>
+                    <td class="price">32 RON</td>
+                </tr>
+                <tr>
+                    <td><strong>Cold Brew Tonic</strong> <span class="ml">250ml</span>
+                        <span class="ingredients">50ml cold brew + 200ml Premium tonic water</span>
+                    </td>
+                    <td class="price">36 RON</td>
+                </tr>
+                <tr>
+                    <td><strong>Fler Frappé</strong> <span class="ml">300ml</span>
+                        <span class="ingredients">Espresso, lapte, zahăr brun, gheață, frișcă bătută</span>
+                    </td>
+                    <td class="price">38 RON</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- SLIDE 4: AFFOGATO EXPERIENCE (BG: ESPRESSOR) -->
+<section class="slide bg-coffee-main">
+    <h2>Affogato Experience</h2>
+    <div class="menu-grid">
+        <div class="highlight-card">
+            <div class="promo-badge">Gelato Concept</div>
+            <table>
+                <tr>
+                    <td>
+                        <strong>Classic Affogato</strong>
+                        <span class="ingredients">1 artisanal vanilla gelato scoop + 20ml hot Ethiopia espresso</span>
+                    </td>
+                    <td class="price">38 RON</td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Fler Boozy Affogato</strong>
+                        <span class="ingredients">Vanilla gelato + espresso + 20ml Disaronno / Baileys</span>
+                    </td>
+                    <td class="price">52 RON</td>
+                </tr>
+            </table>
+        </div>
+        <div class="flex-center">
+            <p style="font-style: italic; color: #fff; border: 1px dashed var(--gold); padding: 30px; line-height: 1.6; text-align: center; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px);">
+                "The ultimate harmony between artisanal gelato and intense specialty espresso extraction."
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- SLIDE 5: SIGNATURES (BG: FOARFECA) -->
+<section class="slide bg-scissors">
+    <h2>Signature Cocktails <span style="font-weight: 300; font-size: 0.6em;">(Fler Concept)</span></h2>
+    <div class="menu-grid">
+        <div>
+            <table>
+                <tr>
+                    <td><strong>Arak Madu</strong> <span class="ml">110ml</span>
+                        <span class="ingredients">60ml Arak, 25ml lemon juice, 15ml honey, 10ml water</span>
+                    </td>
+                    <td class="price">48 RON</td>
+                </tr>
+                <tr>
+                    <td><strong>Arak Caipirinha</strong> <span class="ml">120ml</span>
+                        <span class="ingredients">60ml Arak, 1 diced lime, 6g brown sugar, 10ml water</span>
+                    </td>
+                    <td class="price">45 RON</td>
+                </tr>
+                <tr>
+                    <td><strong>Lady Arak</strong> <span class="ml">340ml</span>
+                        <span class="ingredients">50ml Arak, 15ml Grenadine, 250ml fresh orange juice</span>
+                    </td>
+                    <td class="price">46 RON</td>
+                </tr>
+                <tr>
+                    <td><strong>Casa Blanca</strong> <span class="ml">155ml</span>
+                        <span class="ingredients">50ml Arak, 50ml pineapple juice, 25ml lemon, 20ml coconut liqueur, mint</span>
+                    </td>
+                    <td class="price">49 RON</td>
+                </tr>
+            </table>
+        </div>
+        <div class="highlight-card">
+            <div class="promo-badge">House Special</div>
+            <h3 style="font-size: 20px; margin-bottom: 10px;">ARAK MADU: THE TASTE OF VICTORY</h3>
+            <p style="font-size: 14px; font-style: italic; line-height: 1.6; color: var(--text-main);">
+                "Discover the Levant legend: where the strength of Arak meets the golden sweetness of honey and the zest of fresh lemon. A flērcafē masterpiece."
+            </p>
+            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border);">
+                <span style="font-weight: 600; color: var(--gold);">Fleur Madu</span> <span class="ml">115ml</span>
+                <span class="ingredients">50ml Arak, 30ml lemon juice, 20ml mango puree, 15ml honey syrup</span>
+                <p class="price" style="text-align: left; margin-top: 5px;">48 RON</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SLIDE 6: SPRITZ TIME (BG: FOARFECA) -->
+<section class="slide bg-scissors">
+    <h2>Spritz Time</h2>
+    <div class="menu-grid">
+        <div>
+            <table>
+                <tr>
+                    <td><strong>Aperol Spritz</strong> <span class="ml">250ml</span>
+                        <span class="ingredients">90ml Grande Vento Prosecco, 60ml Aperol, 30ml mineral water, orange</span>
+                    </td>
+                    <td class="price">42 RON</td>
+                </tr>
+                <tr>
+                    <td><strong>Hugo Spritz</strong> <span class="ml">250ml</span>
+                        <span class="ingredients">100ml Prosecco, 20ml elderflower syrup, mentă, lime</span>
+                    </td>
+                    <td class="price">42 RON</td>
+                </tr>
+                <tr>
+                    <td><strong>Limoncello Spritz</strong> <span class="ml">250ml</span>
+                        <span class="ingredients">90ml Prosecco, 60ml Isolabella Limoncello, apă minerală, lămâie</span>
+                    </td>
+                    <td class="price">42 RON</td>
+                </tr>
+                <tr>
+                    <td><strong>Negroni Sbagliato</strong> <span class="ml">120ml</span>
+                        <span class="ingredients">40ml Campari, 40ml Cinzano Rosso, 40ml Prosecco Extra Dry</span>
+                    </td>
+                    <td class="price">42 RON</td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <table>
+                <tr>
+                    <td><strong>The Banker</strong> <span class="ml">160ml</span>
+                        <span class="ingredients">50ml Aperol, 60ml Gin Pink, 30ml fresh lemon juice, 20ml simple syrup</span>
+                    </td>
+                    <td class="price">44 RON</td>
+                </tr>
+                <tr>
+                    <td><strong>Gin Tonic Classic</strong> <span class="ml">250ml</span>
+                        <span class="ingredients">60ml Tanqueray London Dry, 150ml Premium tonic, ienupăr</span>
+                    </td>
+                    <td class="price">40 RON</td>
+                </tr>
+                <tr>
+                    <td><strong>Gin Tonic Pink</strong> <span class="ml">250ml</span>
+                        <span class="ingredients">60ml Gordon Pink, 150ml Premium tonic, fructe roșii, mentă</span>
+                    </td>
+                    <td class="price">42 RON</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- SLIDE 7: MODERN & HIGH-END CLASSICS (BG: FOARFECA) -->
+<section class="slide bg-scissors">
+    <h2>Modern & High-End Classics</h2>
+    <div class="menu-grid">
+        <table>
+            <tr>
+                <td><strong>Don Paloma</strong> <span class="ml">160ml</span>
+                    <span class="ingredients">45ml Don Julio Blanco, 15ml fresh lime, 100ml San Pellegrino Grapefruit Soda</span>
+                </td>
+                <td class="price">48 RON</td>
+            </tr>
+            <tr>
+                <td><strong>Cherry Silk</strong> <span class="ml">85ml</span>
+                    <span class="ingredients">45ml Whiskey, 20ml dry Vermouth, clarified cherry syrup</span>
+                </td>
+                <td class="price">45 RON</td>
+            </tr>
+            <tr>
+                <td><strong>Velvet Espresso Martini</strong> <span class="ml">135ml</span>
+                    <span class="ingredients">50ml Ketel One Vodka, 30ml Espresso Ethiopia, 20ml Tia Maria, vanilie</span>
+                </td>
+                <td class="price">42 RON</td>
+            </tr>
+            <tr>
+                <td><strong>Espresso Martini</strong> <span class="ml">125ml</span>
+                    <span class="ingredients">40ml Ketel One, 30ml Tia Maria, 30ml espresso, sirop</span>
+                </td>
+                <td class="price">42 RON</td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td><strong>Porn Star Martini</strong> <span class="ml">140ml</span>
+                    <span class="ingredients">40ml Ketel One, 20ml Passoa, 20ml passion fruit, 40ml Prosecco</span>
+                </td>
+                <td class="price">46 RON</td>
+            </tr>
+            <tr>
+                <td><strong>Margarita</strong> <span class="ml">110ml</span>
+                    <span class="ingredients">50ml Don Julio Blanco, 30ml Triple Sec, 30ml lime, sare de mare</span>
+                </td>
+                <td class="price">42 RON</td>
+            </tr>
+            <tr>
+                <td><strong>Strawberry Daiquiri</strong> <span class="ml">130ml</span>
+                    <span class="ingredients">40ml Captain Morgan White, 50ml suc căpșuni, 20ml triple sec</span>
+                </td>
+                <td class="price">42 RON</td>
+            </tr>
+        </table>
+    </div>
+</section>
+
+<!-- SLIDE 8: TRADITIONAL CLASSICS (BG: FOARFECA) -->
+<section class="slide bg-scissors">
+    <h2>Traditional Classics</h2>
+    <div class="menu-grid">
+        <table>
+            <tr>
+                <td><strong>Negroni</strong> <span class="ml">105ml</span>
+                    <span class="ingredients">35ml Gin, 35ml Campari, 35ml Cinzano Rosso</span>
+                </td>
+                <td class="price">42 RON</td>
+            </tr>
+            <tr>
+                <td><strong>Old Fashioned</strong> <span class="ml">100ml</span>
+                    <span class="ingredients">60ml Bulleit Bourbon, 10ml sirop zahăr, bitters, portocală</span>
+                </td>
+                <td class="price">45 RON</td>
+            </tr>
+            <tr>
+                <td><strong>Disaronno Sour</strong> <span class="ml">110ml</span>
+                    <span class="ingredients">60ml Disaronno, 30ml fresh lemon juice, 20ml simple syrup</span>
+                </td>
+                <td class="price">40 RON</td>
+            </tr>
+            <tr>
+                <td><strong>Mojito</strong> <span class="ml">250ml</span>
+                    <span class="ingredients">60ml White Rum, lime, zahăr brun, mentă, minerală</span>
+                </td>
+                <td class="price">40 RON</td>
+            </tr>
+        </table>
+        <table>
+            <tr><td><strong>Mai Tai</strong> <span class="ml">225ml</span>
+                <span class="ingredients">Rom alb & dark, Triple Sec, lime, orgeat</span>
+            </td><td class="price">45 RON</td></tr>
+            <tr><td><strong>Pina Colada</strong> <span class="ml">210ml</span>
+                <span class="ingredients">Rom alb, cocos, suc ananas</span>
+            </td><td class="price">42 RON</td></tr>
+            <tr><td><strong>Cuba Libre</strong> <span class="ml">250ml</span>
+                <span class="ingredients">Rom, lime fresh, Coca-Cola</span>
+            </td><td class="price">38 RON</td></tr>
+            <tr><td><strong>White Russian</strong> <span class="ml">150ml</span>
+                <span class="ingredients">Vodka Premium, Bailey's, frișcă bătută</span>
+            </td><td class="price">38 RON</td></tr>
+        </table>
+    </div>
+</section>
+
+<!-- SLIDE 9: WINE SELECTION (BG: FOARFECA) -->
+<section class="slide bg-scissors">
+    <h2>Wine Selection (Glass & Bottle)</h2>
+    <div class="menu-grid">
+        <div>
+            <div class="category-label"><i class="fa-solid fa-wine-glass"></i> By the Glass (150ml)</div>
+            <table>
+                <tr>
+                    <td><strong>Davino VAST White</strong> <span class="ingredients">Sec - Fresh, note citrice</span></td>
+                    <td class="price">35 RON</td>
+                </tr>
+                <tr>
+                    <td><strong>Davino VAST Rosé</strong> <span class="ingredients">Sec - Fructat, arome de cireșe</span></td>
+                    <td class="price">35 RON</td>
+                </tr>
+                <tr>
+                    <td><strong>Davino VAST Red</strong> <span class="ingredients">Sec - Corp mediu, catifelat</span></td>
+                    <td class="price">38 RON</td>
+                </tr>
+                <tr>
+                    <td><strong>Cinzano Prosecco D.O.C.</strong> <span class="ingredients">Extra Dry - Elegant & fin</span></td>
+                    <td class="price">32 RON</td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <div class="category-label"><i class="fa-solid fa-bottle-wine"></i> Bottles (750ml)</div>
+            <table>
+                <tr>
+                    <td><strong>Sole Chardonnay / Rosé</strong> <span class="ingredients">Premium Range - Sec</span></td>
+                    <td class="price">? RON</td>
+                </tr>
+                <tr>
+                    <td><strong>Selene Merlot</strong> <span class="ingredients">Intens & Viguros - Sec</span></td>
+                    <td class="price">? RON</td>
+                </tr>
+                <tr>
+                    <td><strong>Davino Iacob Red</strong> <span class="ingredients">Cabernet & Fetească Neagră - Sec</span></td>
+                    <td class="price">? RON</td>
+                </tr>
+                <tr>
+                    <td><strong>Davino Iacob White</strong> <span class="ingredients">Floral & Echilibrat - Demisec</span></td>
+                    <td class="price">? RON</td>
+                </tr>
+                <tr>
+                    <td><strong>Davino VAST White</strong> <span class="ingredients">Note de miere - Demidulce</span></td>
+                    <td class="price">? RON</td>
+                </tr>
+                <tr>
+                    <td><strong>Davino Domaine Ceptura</strong> <span class="ingredients">Desert Choice - Dulce</span></td>
+                    <td class="price">? RON</td>
+                </tr>
+                <tr style="border-top: 1px solid var(--gold);">
+                    <td><strong>Moët & Chandon Brut</strong> <span class="ingredients">Champagne Prestige</span></td>
+                    <td class="price">? RON</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- SLIDE 10: BEER, SOFTS & WATER (BG: FOARFECA) -->
+<section class="slide bg-scissors">
+    <h2>Refreshments, Water & Beer</h2>
+    <div class="menu-grid">
+        <div>
+            <div class="category-label">Beer Selection</div>
+            <table>
+                <tr><td><strong>Nenea Iancu</strong> (500ml)</td><td class="price">24-26 RON</td></tr>
+                <tr><td><strong>Corona Extra</strong> (355ml)</td><td class="price">26 RON</td></tr>
+                <tr><td><strong>Ground Zero Craft</strong> (330ml)</td><td class="price">28 RON</td></tr>
+                <tr><td><strong>Zăganu / Hop Hooligans</strong></td><td class="price">28 RON</td></tr>
+            </table>
+        </div>
+        <div>
+            <div class="category-label">Soft Drinks & Water</div>
+            <table>
+                <tr><td>Coca-Cola / Zero / Fanta / Sprite</td><td class="price">16 RON</td></tr>
+                <tr><td>Schweppes Tonic / Bitter Lemon</td><td class="price">16 RON</td></tr>
+                <tr><td><strong>Sunrise in Primăverii Smoothie</strong></td><td class="price">35 RON</td></tr>
+                <tr><td><strong>Green Detox Smoothie</strong></td><td class="price">35 RON</td></tr>
+                <tr><td>Apa plată / minerală (750ml)</td><td class="price">24 RON</td></tr>
+                <tr><td>Apa plată / minerală (330ml)</td><td class="price">16 RON</td></tr>
+            </table>
+        </div>
+    </div>
+</section>
+
+<!-- SLIDE 11: MARe EXPERIENCE (BG: MUSEUM) -->
+<section class="slide flex-center bg-museum">
+    <div class="logo-wrap">
+        <img src="IMG_0060.JPEG" alt="flērcafē" class="logo-img">
+    </div>
+    <h1 style="font-size: 52px;">The MARe Experience</h1>
+    <p class="tagline">Where Art Meets Aroma</p>
+    <div style="margin-top: 30px; padding: 30px; background: rgba(0,0,0,0.85); border: 1px solid var(--gold); max-width: 750px; backdrop-filter: blur(8px);">
+        <p style="font-size: 15px; line-height: 1.8; font-style: italic; color: #fff; text-align: center;">
+            "Located in the heart of the Primăverii district, within the architectural landmark of the Museum of Recent Art, flērcafē is more than a coffee shop. It's a sanctuary for the senses, where specialty coffee, curated spirits, and contemporary art converge to create an unforgettable experience."
+        </p>
+    </div>
+    <p style="margin-top: auto; color: var(--gold); font-size: 13px; letter-spacing: 4px; font-weight: 700; text-transform: uppercase;">BUCHAREST • PRIMĂVERII • MARe</p>
+</section>
+
+</body>
+</html>
